@@ -20,12 +20,12 @@ import java.util.List;
  * Created by daquexian on 17-2-16.
  */
 
-public class LaTeXtView extends TextView {
+public class LaTeXtView extends android.support.v7.widget.AppCompatTextView {
     public LaTeXtView(Context context) {
         super(context);
     }
 
-    public void setTextWithFormula(TextWithFormula textWithFormula) {
+    public void setTextWithFormula(TextWithFormula textWithFormula,int size) {
         List<TextWithFormula.Formula> formulas = textWithFormula.getFormulas();
         final SpannableStringBuilder builder = textWithFormula;
 
@@ -33,7 +33,7 @@ public class LaTeXtView extends TextView {
             TeXFormula teXFormula = TeXFormula.getPartialTeXFormula(formula.content);
 
            try {
-                Bitmap bitmap = getBitmap(teXFormula);
+                Bitmap bitmap = getBitmap(teXFormula,size);
                 if (bitmap.getWidth() > FlexibleRichTextView.MAX_IMAGE_WIDTH) {
                     bitmap = Bitmap.createScaledBitmap(bitmap, FlexibleRichTextView.MAX_IMAGE_WIDTH,
                             bitmap.getHeight() * FlexibleRichTextView.MAX_IMAGE_WIDTH / bitmap.getWidth(),
@@ -79,15 +79,17 @@ public class LaTeXtView extends TextView {
                         });*/
             }
         }
-
+        setTextSize(size);
         setText(builder);
     }
 
-    private Bitmap getBitmap(TeXFormula formula) {
+    private Bitmap getBitmap(TeXFormula formula,int size) {
         TeXIcon icon = formula.new TeXIconBuilder()
                 .setStyle(TeXConstants.STYLE_DISPLAY)
-                .setSize(getPaint().getTextSize() / getPaint().density)
-                .setWidth(TeXConstants.UNIT_SP, getPaint().getTextSize() / getPaint().density, TeXConstants.ALIGN_LEFT)
+                .setSize(size)
+               // .setSize(getPaint().getTextSize() / getPaint().density)
+               // .setWidth(TeXConstants.UNIT_SP, getPaint().getTextSize() / getPaint().density, TeXConstants.ALIGN_LEFT)
+                .setWidth(TeXConstants.UNIT_SP, size, TeXConstants.ALIGN_LEFT)
                 .setIsMaxWidth(true)
                 .setInterLineSpacing(TeXConstants.UNIT_SP,
                         AjLatexMath.getLeading(getPaint().getTextSize() / getPaint().density))
