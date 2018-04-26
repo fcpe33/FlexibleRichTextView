@@ -64,6 +64,7 @@ public class FlexibleRichTextView extends LinearLayout {
 
     private List<Tokenizer.TOKEN> mTokenList;
     private int mTokenIndex;
+    private static int mSize;
 
     private boolean mCenter;
 
@@ -129,7 +130,7 @@ public class FlexibleRichTextView extends LinearLayout {
 
                 final LaTeXtView textView = new LaTeXtView(mContext);
 
-                textView.setTextWithFormula(textWithFormula);
+                textView.setTextWithFormula(textWithFormula,mSize);
 
                 textView.setMovementMethod(LinkMovementMethod.getInstance());
                 myAddView(textView);
@@ -145,16 +146,17 @@ public class FlexibleRichTextView extends LinearLayout {
         }
     }
 
-    public void setText(String text) {
-        setText(text, new ArrayList<Attachment>());
+    public void setText(String text, int size) {
+        setText(text, new ArrayList<Attachment>(),size);
     }
 
-    public void setText(String text, List<Attachment> attachmentList) {
+    public void setText(String text, List<Attachment> attachmentList, int size) {
         text = text.replaceAll("\u00AD", "");
 
         mAttachmentList = attachmentList;
         mTokenList = tokenizer(text, mAttachmentList);
 
+        mSize = size;
         setToken(mTokenList, attachmentList);
     }
 
@@ -740,7 +742,7 @@ public class FlexibleRichTextView extends LinearLayout {
         FlexibleRichTextView flexibleRichTextView = new FlexibleRichTextView(context, onViewClickListener, showRemainingAtt);
 
         if (!TextUtils.isEmpty(string)) {
-            flexibleRichTextView.setText(string, attachmentList);
+            flexibleRichTextView.setText(string, attachmentList,mSize);
         }
 
         return flexibleRichTextView;
